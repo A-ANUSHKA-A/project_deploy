@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from streamlit_extras.let_it_rain import rain
 import time
 
 # =====================================
@@ -22,12 +21,12 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-.main{
-    background-color:#f8fafc;
+.main {
+    background-color: #f8fafc;
 }
 
 .title-box{
-    background:linear-gradient(90deg,#2563eb,#06b6d4);
+    background: linear-gradient(90deg,#2563eb,#06b6d4);
     padding:25px;
     border-radius:15px;
     text-align:center;
@@ -36,33 +35,45 @@ st.markdown("""
 }
 
 .prediction{
-    background:#dcfce7;
-    padding:25px;
-    border-radius:15px;
-    border-left:8px solid #16a34a;
+    background:#d1fae5;
+    padding:20px;
+    border-radius:12px;
+    border-left:8px solid #10b981;
     text-align:center;
-    box-shadow:0px 4px 12px rgba(0,0,0,0.08);
 }
 
-.footer{
-    text-align:center;
-    color:gray;
-    margin-top:40px;
+.metric-card{
+    background:white;
+    padding:18px;
+    border-radius:12px;
+    box-shadow:0px 2px 8px rgba(0,0,0,0.08);
 }
 
 .stButton>button{
     width:100%;
     background:#2563eb;
     color:white;
-    height:50px;
+    border:none;
     border-radius:10px;
+    height:50px;
     font-size:18px;
     font-weight:bold;
-    border:none;
 }
 
 .stButton>button:hover{
     background:#1d4ed8;
+}
+
+div[data-testid="stNumberInput"]{
+    background:white;
+    padding:10px;
+    border-radius:10px;
+}
+
+.footer{
+    text-align:center;
+    color:gray;
+    margin-top:40px;
 }
 
 </style>
@@ -75,7 +86,7 @@ st.markdown("""
 st.markdown("""
 <div class="title-box">
 <h1>🏡 House Price Prediction</h1>
-<h4>Predict House Prices using Linear Regression</h4>
+<p>Predict house prices using Machine Learning (Linear Regression)</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -83,17 +94,20 @@ st.markdown("""
 # SIDEBAR
 # =====================================
 
-st.sidebar.title("📌 Project Details")
+st.sidebar.title("📌 Project Info")
 
-st.sidebar.success("""
-### Machine Learning Model
-✅ Linear Regression
+st.sidebar.info("""
+### Model
+- Linear Regression
 
-### Input Feature
-🏠 House Area
+### Feature
+- House Area
 
-### Output
-💰 Estimated House Price
+### Target
+- House Price
+
+### ML Workflow
+Dataset ➜ Training ➜ Prediction
 """)
 
 # =====================================
@@ -115,7 +129,7 @@ model.fit(X, y)
 col1, col2 = st.columns(2)
 
 with col1:
-    st.metric("🏠 Houses", len(df))
+    st.metric("📊 Total Houses", len(df))
 
 with col2:
     st.metric("💰 Average Price", f"₹ {df['price'].mean():,.0f}")
@@ -131,14 +145,14 @@ with st.expander("📂 View Dataset"):
 # USER INPUT
 # =====================================
 
-st.subheader("🏠 Enter House Area")
+st.subheader("🏠 Enter House Details")
 
 area = st.slider(
-    "Area (Square Feet)",
-    min_value=500,
-    max_value=10000,
-    value=3300,
-    step=100
+    "House Area (Square Feet)",
+    500,
+    10000,
+    3300,
+    100
 )
 
 st.write(f"Selected Area: **{area:,} sq ft**")
@@ -149,22 +163,16 @@ st.write(f"Selected Area: **{area:,} sq ft**")
 
 if st.button("🔍 Predict House Price"):
 
-    with st.spinner("Predicting..."):
+    with st.spinner("Calculating Prediction..."):
         time.sleep(1.5)
 
     prediction = model.predict([[area]])
 
-    # Floating Emoji Animation
-    rain(
-        emoji="⭐",
-        font_size=42,
-        falling_speed=5,
-        animation_length="4"
-    )
+    st.snow()
 
     st.markdown(f"""
     <div class="prediction">
-        <h2>💰 Estimated Price</h2>
+        <h2>💰 Estimated House Price</h2>
         <h1>₹ {prediction[0]:,.2f}</h1>
     </div>
     """, unsafe_allow_html=True)
@@ -188,8 +196,7 @@ with c2:
 # =====================================
 
 st.markdown("""
-<hr>
 <div class="footer">
-Made by ANUSHKA ⭐ using Streamlit | Scikit-Learn | Python
+Made by ANUSHKA ⭐ using Streamlit & Scikit-Learn
 </div>
 """, unsafe_allow_html=True)
