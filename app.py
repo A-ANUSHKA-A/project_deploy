@@ -1,4 +1,71 @@
+
 import streamlit as st
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+# -----------------------------------
+# Page Configuration
+# -----------------------------------
+st.set_page_config(
+    page_title="House Price Prediction",
+    page_icon="🏠",
+    layout="centered"
+)
+
+st.title("🏠 House Price Prediction")
+st.write("Predict house price using Linear Regression")
+
+# -----------------------------------
+# Load Dataset
+# -----------------------------------
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_PATH = os.path.join(BASE_DIR, "houseprice.csv")
+
+df = pd.read_csv(CSV_PATH)
+
+st.subheader("Dataset")
+st.dataframe(df)
+
+# -----------------------------------
+# Train Model
+# -----------------------------------
+X = df.drop("price", axis=1)
+y = df["price"]
+
+model = LinearRegression()
+model.fit(X, y)
+
+# -----------------------------------
+# User Input
+# -----------------------------------
+st.subheader("Enter House Area")
+
+area = st.number_input(
+    "Area (Square Feet)",
+    min_value=100,
+    max_value=10000,
+    value=3300,
+    step=100
+)
+
+# -----------------------------------
+# Prediction
+# -----------------------------------
+if st.button("Predict Price"):
+
+    prediction = model.predict([[area]])
+
+    st.success(f"Predicted Price: ₹ {prediction[0]:,.2f}")
+
+# -----------------------------------
+# Model Information
+# -----------------------------------
+st.subheader("Model Details")
+
+st.write("Coefficient:", model.coef_[0])
+st.write("Intercept:", model.intercept_)import streamlit as st
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 import time
